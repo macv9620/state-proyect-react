@@ -17,23 +17,65 @@ function UseState({ name }) {
   // const [loading, setLoading] = React.useState(false);
 
   console.log("Empezando efecto");
+
+  //Funciones declarativas
+
+  const onConfirm = () => {
+    setState({
+      ...state,
+      error: false,
+      loading: false,
+      confirmed: true,
+    });
+  };
+
+  const onError = () => {
+    setState({
+      ...state,
+      error: true,
+      loading: false,
+    });
+  };
+
+  const onWrite = (event) => {
+    setState({
+      ...state,
+      inputValue: event.target.value,
+    });
+  };
+
+  const onCheck = () => {
+    setState({
+      ...state,
+      error: false,
+      loading: true,
+    });
+  };
+
+  const onDelete = ()=>{
+    setState({
+      ...state,
+      deleted: true,
+    });
+  }
+
+  const onReset = ()=>{
+    setState({
+      ...state,
+      confirmed: false,
+      deleted: false,
+      inputValue: "",
+    });
+  }
+
   React.useEffect(() => {
     const requestToBack = () => {
       if (state.inputValue === SECURITY_CODE) {
         console.log("Contraseña correcta");
-        setState({
-          ...state,
-          error: false,
-          loading: false,
-          confirmed: true,
-        });
+        onConfirm();
       } else {
         console.log("ERROR");
-        setState({
-          ...state,
-          error: true,
-          loading: false,
-        });
+        onError();
         console.log(state);
         //setError(true)
       }
@@ -52,19 +94,8 @@ function UseState({ name }) {
   console.log("Terminando efecto");
 
   const catchValue = (event) => {
-    setState({
-      ...state,
-      inputValue: event.target.value,
-    });
+    onWrite(event);
     //setInputValue(event.target.value)
-  };
-
-  const executeCompareBackPass = () => {
-    setState({
-      ...state,
-      error: false,
-      loading: true,
-    });
   };
 
   if (!state.deleted && !state.confirmed) {
@@ -79,7 +110,7 @@ function UseState({ name }) {
           value={state.inputValue}
           onChange={catchValue}
         />
-        <button onClick={executeCompareBackPass}>Comprobar</button>
+        <button onClick={onCheck}>Comprobar</button>
       </div>
     );
   } else if (state.confirmed && !state.deleted) {
@@ -89,19 +120,15 @@ function UseState({ name }) {
         <p>¿Seguro que deseas eliminar la información?</p>
         <div>
           <button
-            onClick={()=>{
-              setState({
-                ...state,
-                deleted: true,
-              });
+            onClick={() => {
+              onDelete()
             }}
-          >Sí, eliminar</button>
+          >
+            Sí, eliminar
+          </button>
           <button
             onClick={() => {
-              setState({
-                ...state,
-                confirmed: false,
-              });
+              onReset()
             }}
           >
             No, volver
@@ -115,17 +142,12 @@ function UseState({ name }) {
       <>
         <h2>Ítem eliminado</h2>
         <button
-            onClick={() => {
-              setState({
-                ...state,
-                confirmed: false,
-                deleted: false,
-                inputValue: '',
-              });
-            }}
-          >
-            Volver a inicio
-          </button>
+          onClick={() => {
+            onReset()
+          }}
+        >
+          Volver a inicio
+        </button>
       </>
     );
   }

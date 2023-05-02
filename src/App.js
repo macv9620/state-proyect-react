@@ -1,7 +1,7 @@
 import './App.css';
 import React from 'react';
 import { UseState } from './UseState.js';
-import { ClassState } from './ClassState.js';
+import { UseReduce } from './UseReducer.js';
 
 function App() {
   return (
@@ -9,8 +9,8 @@ function App() {
       <UseState
        name={'componente funcional'}        
        />
-      <ClassState
-      name={'componente class'}
+      <UseReduce
+      name={'useReducer'}
        />
     </div>
   );
